@@ -15,7 +15,14 @@ public class Bullet : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Destroy(other.gameObject);
+            if (other.GetComponentInChildren<HikerFeatures>() || other.GetComponentInChildren<RangerFeatures>())
+            {
+                Destroy(other.gameObject);
+            }
+            else
+            {
+                other.gameObject.GetComponent<CryptidFeatures>().StartCoroutine("Stun");
+            }
         }
         Destroy(this.gameObject);
     }

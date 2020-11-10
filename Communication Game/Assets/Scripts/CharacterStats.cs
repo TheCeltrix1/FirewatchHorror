@@ -16,6 +16,7 @@ public class CharacterStats : MonoBehaviour
     private void OnEnable()
     {
         this.transform.parent.GetComponent<CharacterController>().height = characterHeight;
+        this.transform.parent.GetComponent<FirstPersonController>().m_OriginalCameraPosition = new Vector3(0, characterHeight/2f - 0.2f ,0);
         _fpsController = this.transform.parent.GetComponent<FirstPersonController>();
         _fpsController.m_WalkSpeed = walkSpeed;
         _fpsController.m_RunSpeed = runSpeed;

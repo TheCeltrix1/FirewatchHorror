@@ -281,6 +281,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   m_JumpSound: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
   m_LandSound: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
+  m_OriginalCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &396904482499403907
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -697,7 +698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ed93a61d9505a546ab33d4e247fbb46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterHeight: 1
+  characterHeight: 2
   walkSpeed: 7
   runSpeed: 15
   stepSound:
@@ -839,7 +840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ed93a61d9505a546ab33d4e247fbb46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterHeight: 1
+  characterHeight: 2
   walkSpeed: 7
   runSpeed: 15
   stepSound:

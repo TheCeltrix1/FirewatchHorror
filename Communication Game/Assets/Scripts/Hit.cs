@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Hit : MonoBehaviour
 {
-    private float _hitTimer = 0.5f;
-    public GameObject source;
+    private float _hitTimer = 1;
+
+    private void OnEnable()
+    {
+        this.transform.GetComponent<AudioSource>().Play();
+        Destroy(this.gameObject, _hitTimer);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -13,11 +18,5 @@ public class Hit : MonoBehaviour
         {
             Destroy(other.gameObject);
         }
-    }
-
-    private void Update()
-    {
-        _hitTimer -= Time.deltaTime;
-        if (_hitTimer <= 0) Destroy(this.gameObject);
     }
 }
