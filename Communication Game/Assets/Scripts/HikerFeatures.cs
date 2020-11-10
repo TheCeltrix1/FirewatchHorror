@@ -18,7 +18,6 @@ public class HikerFeatures : MonoBehaviour
         if(!torch) _ntwrkcmds.CmdSpawnTorchCommand(this.transform.position, _currentCamera.transform.rotation,this.transform.parent.gameObject, this.transform.parent.GetComponent<NetworkIdentity>().netId);
     }
     
-    // Update is called once per frame
     void Update()
     {
         if (torch) {

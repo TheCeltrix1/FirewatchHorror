@@ -6,15 +6,20 @@ using Mirror;
 public class RangerFeatures : MonoBehaviour
 {
     private float _gunFireRate = 1;
-    public GameObject bullet;
+    private bool _selectedObject;
+    public GameObject bulletSound;
     private Camera _currentCamera;
     private NetworkCommands _ntwrkcmds;
+    public GameObject torch;
+    private bool _torchOn = false;
 
     void Start()
     {
+        _selectedObject = false;
         _ntwrkcmds = this.transform.parent.GetComponent<NetworkCommands>();
-        StartCoroutine("Fire");
         _currentCamera = this.transform.parent.GetChild(0).GetComponent<Camera>();
+        _ntwrkcmds.CmdSpawnTorchCommand(this.transform.position, _currentCamera.transform.rotation, this.transform.parent.gameObject, this.transform.parent.GetComponent<NetworkIdentity>().netId);
+        StartCoroutine("Fire");
     }
 
     IEnumerator Fire()
@@ -23,16 +28,35 @@ public class RangerFeatures : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                //Shoot();
-                _ntwrkcmds.CmdSpawnBullet(new Vector3(this.transform.position.x, this.transform.position.y - 0.25f, this.transform.position.z) + _currentCamera.transform.forward, _currentCamera.transform.rotation);
-                yield return new WaitForSeconds(_gunFireRate);
+                if (_selectedObject)
+                {
+                    _torchOn = !_torchOn;
+                    torch.SetActive(_torchOn);
+                    yield return new WaitForEndOfFrame();
+                }
+                else
+                {
+                    _ntwrkcmds.CmdSpawnBullet(new Vector3(this.transform.position.x, this.transform.position.y - 0.25f, this.transform.position.z) + _currentCamera.transform.forward, _currentCamera.transform.rotation);
+                    Shoot();
+                    yield return new WaitForSeconds(_gunFireRate); 
+                }
             }
             yield return null;
         }
     }
 
+    private void Update()
+    {
+        if (Input.mouseScrollDelta.y != 0) _selectedObject = !_selectedObject;
+        if (torch)
+        {
+            torch.transform.rotation = _currentCamera.transform.rotation;
+            torch.transform.position = this.transform.position + (_currentCamera.transform.forward / 10);
+        }
+    }
+
     private void Shoot()
     {
-        GameObject pewpew = Instantiate(bullet, new Vector3(this.transform.position.x, this.transform.position.y-0.25f, this.transform.position.z) + _currentCamera.transform.forward, _currentCamera.transform.rotation);
+        Instantiate(bulletSound, this.transform.position, this.transform.rotation);
     }
 }

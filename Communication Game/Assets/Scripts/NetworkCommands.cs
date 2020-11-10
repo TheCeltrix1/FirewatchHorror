@@ -6,6 +6,7 @@ using Mirror;
 public class NetworkCommands : NetworkBehaviour
 {
     private HikerFeatures _hikerFeat;
+    private RangerFeatures _rangerFeat;
 
     public override void OnStartAuthority()
     {
@@ -17,6 +18,7 @@ public class NetworkCommands : NetworkBehaviour
     void OnEnable()
     {
         _hikerFeat = this.transform.GetComponentInChildren<HikerFeatures>(true);
+        _rangerFeat = this.transform.GetComponentInChildren<RangerFeatures>(true);
 
     }
 
@@ -43,7 +45,17 @@ public class NetworkCommands : NetworkBehaviour
     {
         GameObject torch = Instantiate(NetworkManager.singleton.spawnPrefabs[2], position + parent.transform.forward, rotation);
         NetworkServer.Spawn(torch, connectionToClient);
-        if (id == netId) _hikerFeat.torch = torch;
+        if (id == netId)
+        {
+            if (this.transform.GetComponentInChildren<HikerFeatures>())
+            {
+                _hikerFeat.torch = torch;
+            }
+            else if (this.transform.GetComponentInChildren<RangerFeatures>())
+            {
+                _rangerFeat.torch = torch;
+            }
+        }
         torch.SetActive(false);
     }
 
