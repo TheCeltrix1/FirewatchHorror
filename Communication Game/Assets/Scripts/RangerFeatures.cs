@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class RangerFeatures : MonoBehaviour
+public class RangerFeatures : NetworkBehaviour
 {
     private float _gunFireRate = 1;
     private bool _selectedObject;
@@ -11,14 +11,15 @@ public class RangerFeatures : MonoBehaviour
     private Camera _currentCamera;
     private NetworkCommands _ntwrkcmds;
     public GameObject torch;
-    private bool _torchOn = false;
+    private bool _torchToggle = false;
 
-    void Start()
+    void OnEnable()
     {
         _selectedObject = false;
-        _ntwrkcmds = this.transform.parent.GetComponent<NetworkCommands>();
-        _currentCamera = this.transform.parent.GetChild(0).GetComponent<Camera>();
-        _ntwrkcmds.CmdSpawnTorchCommand(this.transform.position, _currentCamera.transform.rotation, this.transform.parent.gameObject, this.transform.parent.GetComponent<NetworkIdentity>().netId);
+        _ntwrkcmds = this.GetComponent<NetworkCommands>();
+        //this.transform.parent.GetComponent<NetworkCommands>();
+        _currentCamera = this.transform.GetChild(0).GetComponent<Camera>();
+        _ntwrkcmds.CmdSpawnTorchCommand(this.transform.position, _currentCamera.transform.rotation, this.gameObject, this.transform.GetComponent<NetworkIdentity>().netId,this.gameObject);
         StartCoroutine("Fire");
     }
 
@@ -26,12 +27,12 @@ public class RangerFeatures : MonoBehaviour
     {
         while (true)
         {
+            _torchToggle = false;
             if (Input.GetMouseButtonDown(0))
             {
                 if (_selectedObject)
                 {
-                    _torchOn = !_torchOn;
-                    torch.SetActive(_torchOn);
+                    _torchToggle = true;
                     yield return new WaitForEndOfFrame();
                 }
                 else
@@ -41,6 +42,7 @@ public class RangerFeatures : MonoBehaviour
                     yield return new WaitForSeconds(_gunFireRate); 
                 }
             }
+            if(torch) _ntwrkcmds.CmdUpdateTorchLocation(this.gameObject, this.transform.position + (_currentCamera.transform.forward / 10), _currentCamera.transform.rotation, _torchToggle);
             yield return null;
         }
     }
@@ -48,11 +50,6 @@ public class RangerFeatures : MonoBehaviour
     private void Update()
     {
         if (Input.mouseScrollDelta.y != 0) _selectedObject = !_selectedObject;
-        if (torch)
-        {
-            torch.transform.rotation = _currentCamera.transform.rotation;
-            torch.transform.position = this.transform.position + (_currentCamera.transform.forward / 10);
-        }
     }
 
     private void Shoot()

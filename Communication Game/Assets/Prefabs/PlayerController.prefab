@@ -111,6 +111,9 @@ GameObject:
   - component: {fileID: 7815062859244745524}
   - component: {fileID: 1409198716024412686}
   - component: {fileID: 2183895035324471735}
+  - component: {fileID: 9139424322393928833}
+  - component: {fileID: 3814458893238028752}
+  - component: {fileID: 4537785211588927907}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Player
@@ -459,13 +462,10 @@ MonoBehaviour:
   canvas: {fileID: 7742849993194533860}
   cryptids: 1
   cryptidButton: {fileID: 5292964573258787290}
-  cryptidObject: {fileID: 475302213617164514}
   hikers: 2
   hikerButton: {fileID: 7361209912063153278}
-  hikerObject: {fileID: 1237174852574510804}
   rangers: 2
   rangerButton: {fileID: 4730991222572217738}
-  rangerObject: {fileID: 3949657523081313483}
 --- !u!23 &1409198716024412686
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -513,6 +513,48 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 396904482504492003}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &9139424322393928833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396904482504492003}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 407fe02b144528d44b6098aa5c420023, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackCooldown: 2
+  hitBox: {fileID: 3132473687027924669, guid: 77d085d637179a2418df83b0566b4e7b, type: 3}
+--- !u!114 &3814458893238028752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396904482504492003}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796cd7e0e6964364b9b11982e08d26fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  torch: {fileID: 0}
+--- !u!114 &4537785211588927907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396904482504492003}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 949df138b93832c42b312047cc7df9a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletSound: {fileID: 4105719135941107410, guid: 541b29456a1bc264291d3244c8bd1470,
+    type: 3}
+  torch: {fileID: 0}
 --- !u!1 &475302213617164514
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,8 +757,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 796cd7e0e6964364b9b11982e08d26fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightSource: {fileID: 3865713092024127466, guid: 9d989e738e6cda04fbef7b92dd023d29,
-    type: 3}
   torch: {fileID: 0}
 --- !u!1 &3580745370937389318
 GameObject:
@@ -1302,7 +1342,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 396904482504425923}
-  m_PlaneDistance: 1
+  m_PlaneDistance: 0.5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0

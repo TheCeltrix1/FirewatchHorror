@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3865713092024127464}
   - component: {fileID: 3865713092024127465}
-  - component: {fileID: 4726905419486944148}
+  - component: {fileID: 8473630091779677329}
   m_Layer: 0
   m_Name: TorchLight
   m_TagString: Untagged
@@ -93,7 +93,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &4726905419486944148
+--- !u!114 &8473630091779677329
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

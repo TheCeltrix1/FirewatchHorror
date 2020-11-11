@@ -4,16 +4,17 @@ using UnityEngine;
 using Mirror;
 using UnityStandardAssets.Characters.FirstPerson;
 
-public class CryptidFeatures : MonoBehaviour
+public class CryptidFeatures : NetworkBehaviour
 {
     public float attackCooldown = 2;
     public GameObject hitBox;
     private NetworkCommands _ntwrkcmds;
     private bool _stunned = true;
 
-    void Start()
+    void OnEnable()
     {
-        _ntwrkcmds = this.transform.parent.GetComponent<NetworkCommands>();
+        _ntwrkcmds = this.GetComponent<NetworkCommands>();
+        //this.transform.parent.GetComponent<NetworkCommands>();
         StartCoroutine("Attack");
     }
 
@@ -38,12 +39,12 @@ public class CryptidFeatures : MonoBehaviour
 
     IEnumerator Stun()
     {
-        this.transform.parent.GetComponent<FirstPersonController>().m_RunSpeed /= 2;
-        this.transform.parent.GetComponent<FirstPersonController>().m_WalkSpeed /= 2;
+        this.transform.GetComponent<FirstPersonController>().m_RunSpeed /= 2;
+        this.transform.GetComponent<FirstPersonController>().m_WalkSpeed /= 2;
         _stunned = !_stunned;
         yield return new WaitForSeconds(1);
-        this.transform.parent.GetComponent<FirstPersonController>().m_RunSpeed *= 2;
-        this.transform.parent.GetComponent<FirstPersonController>().m_WalkSpeed *= 2;
+        this.transform.GetComponent<FirstPersonController>().m_RunSpeed *= 2;
+        this.transform.GetComponent<FirstPersonController>().m_WalkSpeed *= 2;
         _stunned = !_stunned;
         yield return null;
     }

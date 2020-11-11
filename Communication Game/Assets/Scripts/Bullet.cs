@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
 
     private void OnEnable()
     {
-        transform.GetComponent<Rigidbody>().velocity = this.transform.forward * 20;
+        transform.GetComponent<Rigidbody>().velocity = this.transform.forward * 50;
     }
 
     private void OnTriggerEnter(Collider other)

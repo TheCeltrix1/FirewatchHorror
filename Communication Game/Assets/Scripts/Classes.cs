@@ -10,21 +10,31 @@ public class Classes : NetworkBehaviour
 
     [SyncVar] public int cryptids = 1;
     public GameObject cryptidButton;
-    public GameObject cryptidObject;
+    private CryptidFeatures cryptidObject;
 
     [SyncVar]public int hikers = 2;
     public GameObject hikerButton;
-    public GameObject hikerObject;
+    private HikerFeatures hikerObject;
 
     [SyncVar] public int rangers = 2;
     public GameObject rangerButton;
-    public GameObject rangerObject;
+    private RangerFeatures rangerObject;
 
     private void OnEnable()
     {
-        canvas = GetComponentInChildren<Canvas>().gameObject;
+        //canvas = GetComponentInChildren<Canvas>().gameObject;
+        cryptidObject = this.GetComponent<CryptidFeatures>();
+        hikerObject = this.GetComponent<HikerFeatures>();
+        rangerObject = this.GetComponent<RangerFeatures>();
         GetComponent<FirstPersonController>().enabled = false;
         Cursor.visible = true;
+    }
+
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+        this.transform.GetComponentInChildren<Camera>().enabled = true;
+        this.transform.GetComponentInChildren<AudioListener>().enabled = true;
     }
 
     private void Update()
@@ -52,11 +62,11 @@ public class Classes : NetworkBehaviour
         GameOn(rangerObject);
     }
 
-    public void GameOn(GameObject obj)
+    public void GameOn(NetworkBehaviour obj)
     {
         canvas.SetActive(false);
         Cursor.visible = false;
         GetComponent<FirstPersonController>().enabled = true;
-        obj.SetActive(true);
+        obj.enabled = true;
     }
 }
