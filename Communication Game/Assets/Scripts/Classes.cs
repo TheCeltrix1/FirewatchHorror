@@ -7,6 +7,8 @@ using Mirror;
 public class Classes : NetworkBehaviour
 {
     public GameObject canvas;
+    private NetworkCommands _ntwrkcmds;
+    private int _iNeededAVariable;
 
     [SyncVar] public int cryptids = 1;
     public GameObject cryptidButton;
@@ -22,12 +24,15 @@ public class Classes : NetworkBehaviour
 
     private void OnEnable()
     {
-        //canvas = GetComponentInChildren<Canvas>().gameObject;
+        _ntwrkcmds = this.GetComponent<NetworkCommands>();
         cryptidObject = this.GetComponent<CryptidFeatures>();
         hikerObject = this.GetComponent<HikerFeatures>();
         rangerObject = this.GetComponent<RangerFeatures>();
         GetComponent<FirstPersonController>().enabled = false;
         Cursor.visible = true;
+        transform.GetChild(2).gameObject.SetActive(false);
+        transform.GetChild(3).gameObject.SetActive(false);
+        transform.GetChild(4).gameObject.SetActive(false);
     }
 
     public override void OnStartAuthority()
@@ -47,26 +52,33 @@ public class Classes : NetworkBehaviour
     public void CryptidSelect()
     {
         cryptids--;
-        GameOn(cryptidObject);
+        _iNeededAVariable = 4;
+        GameOn();
+        cryptidObject.Begin();
     }
 
     public void HikerSelect()
     {
         hikers--;
-        GameOn(hikerObject);
+        _iNeededAVariable = 2;
+        GameOn();
+        hikerObject.Begin();
     }
 
     public void RangerSelect()
     {
         rangers--;
-        GameOn(rangerObject);
+        _iNeededAVariable = 3;
+        GameOn();
+        rangerObject.Begin();
     }
 
-    public void GameOn(NetworkBehaviour obj)
+    public void GameOn()
     {
+        _ntwrkcmds.CmdAnimationModelToggle(this.gameObject,_iNeededAVariable);
         canvas.SetActive(false);
         Cursor.visible = false;
         GetComponent<FirstPersonController>().enabled = true;
-        obj.enabled = true;
+        GetComponent<FirstPersonController>().animationModel = _iNeededAVariable;
     }
 }

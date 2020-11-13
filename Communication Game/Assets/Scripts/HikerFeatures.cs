@@ -10,24 +10,21 @@ public class HikerFeatures : NetworkBehaviour
     private NetworkCommands _ntwrkcmds;
     private Camera _currentCamera;
 
-    void OnEnable()
+    public void Begin()
     {
         _ntwrkcmds = this.GetComponent<NetworkCommands>();
         _currentCamera = this.transform.GetChild(0).GetComponent<Camera>();
-        //this.transform.parent.GetComponent<NetworkCommands>();
-        if (!torch) _ntwrkcmds.CmdSpawnTorchCommand(this.transform.position, _currentCamera.transform.rotation,this.transform.gameObject, this.transform.GetComponent<NetworkIdentity>().netId,this.gameObject);
     }
     
     void Update()
     {
-        _torchToggle = false;
-        if (torch) {
+        if (torch && _ntwrkcmds) {
             if (Input.GetMouseButtonDown(0))
             {
-                _torchToggle = true;
+                _torchToggle = !_torchToggle;
+                _ntwrkcmds.CmdTorchActivate(this.gameObject,_torchToggle);
             }
-            _ntwrkcmds.CmdUpdateTorchLocation(this.gameObject, this.transform.position + (_currentCamera.transform.forward / 10), _currentCamera.transform.rotation, _torchToggle);
+            _ntwrkcmds.CmdTorchAngle(this.gameObject);
         }
     }
-
 }

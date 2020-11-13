@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
@@ -43,6 +45,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        private NetworkCommands _ntwrkcmds;
+        public int animationModel;
+        private int _animation;
 
         // Use this for initialization
         private void OnEnable()
@@ -57,6 +62,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+            _ntwrkcmds = this.GetComponent<NetworkCommands>();
         }
 
 
@@ -83,8 +89,34 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_MoveDir.y = 0f;
             }
-
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
+
+            if (animationModel != 0)
+            {
+                switch (m_Jump)
+                {
+                    case true:
+                        _animation = 2;
+                        break;
+
+                    case false:
+                        if (m_MoveDir.x == 0 && m_MoveDir.z == 0)
+                        {
+                            _animation = 0;
+                        }
+                        else if(m_IsWalking)
+                        {
+                            _animation = 3;
+                        }
+                        else
+                        {
+                            _animation = 1;
+                        }
+                        break;
+                }
+                Debug.Log($"Animations: {_animation}");
+                _ntwrkcmds.CmdUpdateAnimations(this.gameObject, animationModel, _animation);
+            }
         }
 
 
@@ -183,8 +215,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public override void OnStartLocalPlayer()
         {
-            Camera.main.transform.SetParent(transform);
-            Camera.main.transform.localPosition = new Vector3(0, 0, 0);
+            m_Camera.transform.SetParent(transform);
+            m_Camera.transform.localPosition = new Vector3(0, 0, 0);
         }
 
         private void UpdateCameraPosition(float speed)

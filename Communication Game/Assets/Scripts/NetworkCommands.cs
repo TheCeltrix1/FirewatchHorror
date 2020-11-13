@@ -12,13 +12,6 @@ public class NetworkCommands : NetworkBehaviour
     {
         _hikerFeat = this.transform.GetComponentInChildren<HikerFeatures>(true);
         _rangerFeat = this.transform.GetComponentInChildren<RangerFeatures>(true);
-
-    }
-
-    [Command(ignoreAuthority = true)]
-    public void CmdSpawnTorchCommand(Vector3 position, Quaternion rotation, GameObject parent, uint id, GameObject gam)
-    {
-        RpcTorchSpawn(position, rotation, parent, id, gam);
     }
 
     [Command(ignoreAuthority = true)]
@@ -34,27 +27,29 @@ public class NetworkCommands : NetworkBehaviour
     }
 
     [Command(ignoreAuthority = true)]
-    public void CmdUpdateTorchLocation(GameObject torch, Vector3 pos, Quaternion rot, bool toggle)
+    public void CmdTorchActivate(GameObject target, bool on)
     {
-        RpcUpdateTorchLocation(torch,pos,rot,toggle);
+        RpcTorchActivate(target, on);
     }
 
-    [ClientRpc]
-    public void RpcTorchSpawn(Vector3 position, Quaternion rotation, GameObject parent, uint id, GameObject dis)
+    [Command(ignoreAuthority = true)]
+    public void CmdTorchAngle(GameObject obj)
     {
-        GameObject torch = Instantiate(NetworkManager.singleton.spawnPrefabs[2], position + parent.transform.forward, rotation);
-        if (id == netId)
-        {
-            /*if (dis.GetComponent<HikerFeatures>())
-            {*/
-                dis.GetComponent<HikerFeatures>().torch = torch;
-            /*}
-            else if (dis.GetComponent<RangerFeatures>())
-            {*/
-                dis.GetComponent<RangerFeatures>().torch = torch;
-            //}
-        }
-        torch.SetActive(false);
+        RpcTorchAngle(obj);
+    }
+
+    [Command]
+    public void CmdAnimationModelToggle(GameObject obj, int i)
+    {
+        RpcAnimationModelToggle(obj,i);
+        RpcToggleAnimationModelClient(connectionToClient, obj, i);
+    }
+
+    [Command]
+    public void CmdUpdateAnimations(GameObject obj, int i, int animation)
+    {
+        RpcAnimationUpdate(obj, i, animation);
+        RpcToggleAnimationModelClient(connectionToClient, obj, i);
     }
 
     [ClientRpc]
@@ -70,18 +65,35 @@ public class NetworkCommands : NetworkBehaviour
         GameObject nya = Instantiate(NetworkManager.singleton.spawnPrefabs[1], pos, rot);
         //NetworkServer.Spawn(nya, connectionToClient);
     }
+
+    [ClientRpc]
+    public void RpcTorchActivate(GameObject target, bool on)
+    {
+        target.transform.GetChild(1).gameObject.SetActive(on);
+    }
     
     [ClientRpc]
-    public void RpcUpdateTorchLocation(GameObject torch, Vector3 pos, Quaternion rot, bool toggle)
+    public void RpcTorchAngle(GameObject obj)
     {
-        if (torch.GetComponent<HikerFeatures>().torch) {
-            GameObject hik = torch.GetComponent<HikerFeatures>().torch;
-            hik.transform.position = pos;
-            hik.transform.rotation = rot;
-            if (toggle) {
-                hik.SetActive(!hik.activeInHierarchy);
-            }
-        }
+        obj.transform.GetChild(1).rotation = obj.transform.GetChild(0).rotation;
     }
 
+    [ClientRpc]
+    public void RpcAnimationModelToggle(GameObject obj, int i)
+    {
+        obj.transform.GetChild(i).gameObject.SetActive(true);
+    }
+
+    [ClientRpc]
+    public void RpcAnimationUpdate(GameObject obj, int i, int animation)
+    {
+        Animator kms = obj.transform.GetChild(i).GetChild(0).GetComponent<Animator>();
+        kms.SetInteger(animation, animation);
+    }
+
+    [TargetRpc]
+    public void RpcToggleAnimationModelClient(NetworkConnection net, GameObject obj, int i)
+    {
+        obj.transform.GetChild(i).gameObject.SetActive(false);
+    }
 }

@@ -13,13 +13,11 @@ public class RangerFeatures : NetworkBehaviour
     public GameObject torch;
     private bool _torchToggle = false;
 
-    void OnEnable()
+    public void Begin()
     {
         _selectedObject = false;
         _ntwrkcmds = this.GetComponent<NetworkCommands>();
-        //this.transform.parent.GetComponent<NetworkCommands>();
         _currentCamera = this.transform.GetChild(0).GetComponent<Camera>();
-        _ntwrkcmds.CmdSpawnTorchCommand(this.transform.position, _currentCamera.transform.rotation, this.gameObject, this.transform.GetComponent<NetworkIdentity>().netId,this.gameObject);
         StartCoroutine("Fire");
     }
 
@@ -27,12 +25,12 @@ public class RangerFeatures : NetworkBehaviour
     {
         while (true)
         {
-            _torchToggle = false;
             if (Input.GetMouseButtonDown(0))
             {
                 if (_selectedObject)
                 {
-                    _torchToggle = true;
+                    _torchToggle = !_torchToggle;
+                    _ntwrkcmds.CmdTorchActivate(this.gameObject,_torchToggle);
                     yield return new WaitForEndOfFrame();
                 }
                 else
@@ -42,7 +40,8 @@ public class RangerFeatures : NetworkBehaviour
                     yield return new WaitForSeconds(_gunFireRate); 
                 }
             }
-            if(torch) _ntwrkcmds.CmdUpdateTorchLocation(this.gameObject, this.transform.position + (_currentCamera.transform.forward / 10), _currentCamera.transform.rotation, _torchToggle);
+            //this.transform.GetChild(1).rotation = this.transform.GetChild(0).rotation;
+            _ntwrkcmds.CmdTorchAngle(this.gameObject);
             yield return null;
         }
     }

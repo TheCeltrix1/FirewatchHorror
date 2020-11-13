@@ -22,9 +22,4 @@ public class CharacterStats : MonoBehaviour
         _fpsController.m_RunSpeed = runSpeed;
         //if (stepSound != null) _fpsController.m_FootstepSounds = stepSound;
     }
-
-    void Update()
-    {
-        
-    }
 }

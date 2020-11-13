@@ -11,7 +11,7 @@ public class CryptidFeatures : NetworkBehaviour
     private NetworkCommands _ntwrkcmds;
     private bool _stunned = true;
 
-    void OnEnable()
+    public void Begin()
     {
         _ntwrkcmds = this.GetComponent<NetworkCommands>();
         //this.transform.parent.GetComponent<NetworkCommands>();
